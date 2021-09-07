@@ -1,0 +1,31 @@
+Crear una función JavaScript que reciba un número de cédula 
+y actualice el correo electrónico de un cliente en la base de datos clientes
+ y en la base de datos factura. Validar el formato del email antes de la actualización.
+
+const conexion = require('./cone_base_datos')
+
+module.exports = app => {
+    const connect = conexion
+
+    app.put('/actualizar_datos', (req, res) => {
+        const cedula = req.body.cedula
+        const correo = req.body.correo
+
+        regex = /^([\da-z_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
+        if(!regex.test(correo)){
+            alert('email no valido');
+        } else {
+            connect.query(`UPDATE clientes c INNER JOIN factura f
+            ON (c.userId = f.userId)
+            SET c.correo = ${correo}, f.correo = ${correo} WHERE c.cedula = ${cedula} AND f.cedula = ${cedula}`,
+            (error, resultado) => {
+            res.redirect('/index');
+        })
+        }
+    })
+}
+
+
+
+
+
